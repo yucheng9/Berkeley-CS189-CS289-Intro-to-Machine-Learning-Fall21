@@ -1,0 +1,282 @@
+% -----------------------------*- LaTeX -*------------------------------
+%
+%   handout.sty -- definitions for notes, class handouts, homeworks,
+%   		   exams, and so forth.
+%
+% ----------------------------------------------------------------------
+
+% support landscape mode (for class slides)
+\DeclareOption{landscape}{\def\@@orient@@{landscape}}
+\DeclareOption{portrait}{\def\@@orient@@{portrait}}
+\ExecuteOptions{portrait}
+\ProcessOptions\relax
+
+% margins
+\RequirePackage[hmargin=1.25in,vmargin=1in,marginparwidth=0.75in,marginparsep=0.125in,heightrounded=true,\@@orient@@]{geometry}
+
+% Fonts (comment out if you get errors)
+\RequirePackage[charter]{mathdesign}
+\RequirePackage[scaled]{berasans}
+\RequirePackage[semibold]{sourcecodepro}
+\RequirePackage[scaled=.96,osf,sups]{XCharter}
+
+% Fix math fonts
+\SetMathAlphabet{\mathsf}{bold}{\encodingdefault}{\sfdefault}{b}{\updefault}
+\SetMathAlphabet{\mathtt}{bold}{\encodingdefault}{\ttdefault}{b}{\updefault}
+\SetMathAlphabet{\mathsf}{normal}{\encodingdefault}{\sfdefault}{\mddefault}{\updefault}
+\SetMathAlphabet{\mathtt}{normal}{\encodingdefault}{\ttdefault}{\mddefault}{\updefault}
+
+% Symbols and typesetting
+\RequirePackage{stmaryrd,textcomp}
+\RequirePackage{microtype}
+
+% use color
+\RequirePackage[dvipsnames,usenames,cmyk]{xcolor}
+\definecolor{Hilite}{cmyk}{0,0.2,0,0}
+\definecolor{LightYellow}{cmyk}{0,0,0.2,0}
+\definecolor{Lightgray}{cmyk}{0,0,0,0.2}
+\def\hilite#1{\colorbox{Hilite}{#1}}		% Should probably use the soul package instead
+
+% vertical alignment and dashed lines in arrays
+\RequirePackage{colortbl} % Just in case; must be loaded before arydshln
+\RequirePackage{array}
+\RequirePackage{arydshln}
+\dashlinedash 0.75pt
+\dashlinegap 1.5pt
+
+% enumerate, tabularx, mdframed
+\RequirePackage{enumerate}
+\RequirePackage{tabularx}	% multipage tabulars
+\RequirePackage{mdframed}	% for solutions and rubrics
+
+%
+%  \headers{left}{middle}{right} -- set up boldface underlined headers
+%	left	-- left header item
+%	middle	-- middle header item
+%	right	-- right header item
+%  
+%  \headers{CS 170}{Final Exam}{Fall 1992}
+%  \headers{CS 277}{Homework 1 (9/15/92)}{Jeff Erickson}
+%
+\newcommand{\headers}[3]{
+   \newpage\setcounter{page}{1}
+   \def\@oddhead{$\underline{\hbox to\textwidth{\footnotesize%
+	\textbf{\rlap{#1}\phantom{hj}\hfill #2 \hfill \llap{#3}}}}$}
+   \def\@oddfoot{\hfill\thepage\hfill}
+}
+
+%
+%  shadowbox sets enclosed text in a gray rectangle with a black border
+%  boxquote is a centered shadowbox with small sans-serif text
+%
+\definecolor{Shadow}{cmyk}{0,0,0,0.025}
+\newenvironment{shadowbox}[1]%
+   {\begin{lrbox}{\@tempboxa}\begin{minipage}{#1\columnwidth}}
+   {\end{minipage}\end{lrbox}\fcolorbox{black}{Shadow}{\usebox{\@tempboxa}}}
+
+\newenvironment{boxquote}[1]
+	{\begin{center}\small\sf\begin{shadowbox}{#1}}
+	{\end{shadowbox}\end{center}}
+
+%
+%  “Problems”’ environment.  Just like “enumerate”’, but indent second and
+%  succeeding paragraphs in each item, and separate items a little more.
+%
+\newlength\tmplen
+\newcounter{probnum}[section]
+\newenvironment{problems}
+{\tmplen=\parindent\begin{enumerate}\parindent=\tmplen\itemsep=3ex plus 0.1fil}
+{\setcounter{probnum}{\theenumi}\end{enumerate}}
+
+%
+%  Solution environment.
+%  \begin{solution} ... \end{solution} -- without frame
+%  \begin{Solution} ... \end{Solution} -- witht frame
+%
+\def\EOSmark{$\blacksquare$\global\needqedfalse}
+\def\EOS{\ifneedqed\markatright{\EOSmark}\else\null\fi}
+
+\newproof{solution}{\global\needqedtrue\normalsize\rmfamily\bfseries Solution}(\normalsize\rmfamily\parindent1.5em)[\EOS]
+
+\newproof{Solution}{\global\needqedtrue\normalsize\rmfamily\bfseries Solution}(\normalsize\rmfamily\parindent1.5em)[\EOS]
+
+\surroundwithmdframed[%
+	linewidth=1.25pt,%
+	linecolor=OliveGreen,%
+	backgroundcolor=Yellow!2]{Solution}
+
+% ----------------------
+% rubric: Standard rubric outside solution
+% subrubric: Rubric with right margin to nest inside solution box
+% Rubric: replace ”Rubric” with argument.
+%	For example: \begin{Rubric}{Standard induction rubric}...\end{Rubric}
+% ----------------------
+
+\newproof{rubric}{\color{BrickRed}\small\sffamily\bfseries Rubric}(\color{BrickRed}\small\sffamily\parindent1.5em)
+
+\newproof{subrubric}{\color{BrickRed}\small\sffamily\bfseries Rubric}(\color{BrickRed}\small\sffamily\parindent1.5em)
+
+\newenvironment{Rubric}[1]
+{\color{BrickRed}\small\sffamily\begin{oneshot}{#1}\upshape\parindent1.5em}
+{\end{oneshot}}
+
+\surroundwithmdframed[
+	linewidth = 1pt,%
+	innerleftmargin = 0.5em,%
+	innerrightmargin = 0.5em,%
+	linecolor = BrickRed,%
+	backgroundcolor = White]{rubric}
+
+\surroundwithmdframed[
+	linewidth = 1pt,%
+	rightmargin = 1em,%	otherwise right edges collide!
+	innerleftmargin = 0.5em,%
+	innerrightmargin = 0.5em,%
+	linecolor = BrickRed,%
+	backgroundcolor = White]{subrubric}
+
+\surroundwithmdframed[
+	linewidth = 1pt,%
+	innerleftmargin = 0.5em,%
+	innerrightmargin = 0.5em,%
+	linecolor = BrickRed,%
+	backgroundcolor = White]{Rubric}
+
+
+%
+%  Add stars and other marks in front of enumerated items.
+%
+\def\itemstars{}
+\def\itemding{}
+\def\resetmarks{\xdef\itemding{}\xdef\itemstars{}}
+\def\Hard{\def\itemstars{\boldmath $^\star$}}
+\def\ReallyHard{\def\itemstars{$^\bigstar$}}
+\def\ReallyReallyHard{\def\itemstars{{\Large$\bigstar$}}}
+\def\labelenumi{\llap{\itemding\itemstars}\theenumi.\resetmarks}
+\def\labelenumii{\llap{\itemding\itemstars}(\theenumii)\resetmarks}
+
+\def\Hint#1{\textsl{[Hint: #1]}}
+
+%
+%  Flag advanced sections and subsections; hack using \marginpar
+%
+\reversemarginpar
+\@mparswitchfalse
+\def\SectFlag#1{\marginpar{\hfill\rlap{\hspace{\marginparsep}\llap{#1}}}}
+\def\Ouch#1{\SectFlag{#1\boldmath$^\star$}}
+\pdfstringdefDisableCommands{\let\Ouch\relax} % allow \OUCH in section titles
+\def\hardsubsection#1{\subsection{\protect\Ouch{\large}#1}}
+\def\hardsection#1{\section{\protect\Ouch{\Large}#1}}
+
+%
+%  Inline figure environment — Frustrating as hell.  The floating version floats,
+%  but it isn’t visually centered inside lists (like the problem lists at the end of 
+%  lecture notes, or homeworks, or exams).  The non-floating version is visually
+%  centered, but doesn’t float.
+%
+%\newenvironment{inline}{\begin{center}\footnotesize\sf}{\end{center}}
+\newenvironment{inline}{\begin{figure}[htp]\centering\footnotesize\sffamily}{\end{figure}}
+
+% ========================================================================
+%  Standard headers for (submitted) homework solutions
+% ========================================================================
+\def\@Class{Woolly Thinking 101}
+\def\Class#1{\renewcommand{\@Class}{#1}}
+
+\def\@Semester{Backspindle 2013}
+\def\Semester#1{\renewcommand{\@Semester}{#1}}
+
+\newcounter{Authors}
+\setcounter{Authors}{3}
+\def\Authors#1{\setcounter{Authors}{#1}}
+
+\def\@AuthorOne{Horace Worblehat}
+\def\@NetIDOne{ook}
+\def\AuthorOne#1#2{\renewcommand{\@AuthorOne}{#1}\renewcommand{\@NetIDOne}{#2}}
+
+\def\@AuthorTwo{Mustrum Ridcully}
+\def\@NetIDTwo{brown}
+\def\AuthorTwo#1#2{\renewcommand{\@AuthorTwo}{#1}\renewcommand{\@NetIDTwo}{#2}}
+
+\def\@AuthorThree{Ponder Stibbons}
+\def\@NetIDThree{hex}
+\def\AuthorThree#1#2{\renewcommand{\@AuthorThree}{#1}\renewcommand{\@NetIDThree}{#2}}
+
+\def\@Section{}
+\def\Section#1{\renewcommand{\@Section}{#1}}
+
+\long\def\HomeworkHeader#1#2{
+\headers{\@Class\ \@Semester}{HW #1.#2}{{\@NetIDOne}\ifnum\theAuthors>1{/\@NetIDTwo}\fi\ifnum\theAuthors>2{/\@NetIDThree}\fi}
+\thispagestyle{plain}
+\setcounter{page}{1}
+\begin{center}
+\fbox{\hbox to 0.97\linewidth{
+\def\arraystretch{1.05}
+\large
+\begin{tabular}{@{}l}
+	\@Class\ \@Semester\\
+	\textbf{Homework {#1} Problem {#2}}\\
+	\ifx\@Section\@empty~\else Return section: \@Section\fi
+\end{tabular}
+\hfill
+\begin{tabular}{r@{~}l@{}}
+	{\@AuthorOne} & ({\@NetIDOne})
+	\\
+	\ifnum\theAuthors>1\quad{\@AuthorTwo}\fi &
+	\ifnum\theAuthors>1({\@NetIDTwo})\fi
+	\\
+	\ifnum\theAuthors>2\quad{\@AuthorThree}\fi &
+	\ifnum\theAuthors>2({\@NetIDThree})\fi
+\end{tabular}
+}}
+\end{center}
+}
+
+\long\def\SolutionHeader#1#2{
+\headers{\@Class\ \@Semester}{HW #1.#2}{Solution}
+\thispagestyle{plain}
+\setcounter{page}{1}
+\begin{center}
+\fbox{\hbox to 0.97\linewidth{
+\Large
+	\@Class\ \@Semester
+	\hfill
+	Homework {#1} Problem {#2} Solution
+}}
+\end{center}
+}
+
+\long\def\ExamHeader#1#2{
+\headers{\@Class}{#1 Problem #2}{\ \@Semester}
+\thispagestyle{plain}
+\setcounter{page}{#2}
+\begin{center}
+\Large
+\def\arraystretch{1.2}
+\begin{tabularx}{\textwidth}{|c|l@{\extracolsep{\fill}}l|}
+	\hline
+	\textbf{\@Class ~\decosix~\@Semester}	& Gradescope name: & \\
+	\textbf{{#1} Problem {#2}}	& &\\
+	\hline
+\end{tabularx}
+\end{center}
+}
+
+\long\def\ExamSolHeader#1#2{
+\headers{\@Class}{#1 Problem #2}{\ \@Semester}
+\thispagestyle{plain}
+\setcounter{page}{1}
+\begin{center}
+\Large
+\def\arraystretch{1.2}
+\begin{tabular}{|c|}
+	\hline
+	\qquad \textbf{\@Class ~\decosix~\@Semester} \qquad{} \\
+	\textbf{{#1} Problem {#2}}\\
+	\hline
+\end{tabular}
+\end{center}
+}
+
+
+

@@ -1,0 +1,112 @@
+% ---------
+%  Compile with "pdflatex hw0".
+% --------
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[11pt]{article}
+\usepackage{jeffe,handout,graphicx}
+\usepackage[utf8]{inputenc}		% Allow some non-ASCII Unicode in source
+
+
+% =========================================================
+%   Define common stuff for solution headers
+% =========================================================
+\pagenumbering{arabic}
+\Class{CS189}
+\Semester{Fall 2021}
+\Authors{1}
+\AuthorOne{Yucheng Jin}{yuchengjin@berkeley.edu}
+%\AuthorTwo{Friday Caliban}{fcaliban}
+%\AuthorThree{Duncan Quagmire}{dquagmir}
+%\Section{}
+
+% =========================================================
+\begin{document}
+
+\title{“I certify that all solutions are entirely in my own words and that I have not looked at another student’s solutions. I have given credit to all external sources I consulted.”}
+\maketitle
+\vspace*{\fill}
+    \begin{center}
+ \large{Signature:}
+\item 
+Yucheng Jin   
+\item
+\item
+Study Group Members:
+\item
+Yuwei Quan
+\item
+Yisen Wang
+\item
+Lanyi Yang
+\item
+    \end{center}
+\vspace*{\fill}
+
+% ---------------------------------------------------------
+
+
+\HomeworkHeader{0}{1}	% homework number, problem number
+\setcounter{page}{2}
+\begin{solution}
+%These are, without exception, inappropriate inquiries, a phrase which here means “all the wrong questions”.  Here are the questions you should have asked instead:
+%\begin{enumerate}[(a)]
+%\item Why would someone say something was stolen when it was never theirs to begin with?
+%\item How could someone who was missing be in two places at once?
+%\item Why would someone destroy one building when they really wanted to destroy another?
+%\end{enumerate}
+%\begin{enumerate} [(a)]
+
+\item 1.  If a matrix $A$ is PSD,  for any non-zero vector $v \in R^n$,  $v^TAv \geq 0$.
+\begin{align*}
+	v^TE[(Z-\mu)(Z-\mu)^T]v
+	& = \sum^n_{i=1} \sum^n_{j=1}E[(Z_i-\mu_i)(Z_j-\mu_j)]v_iv_j  & \text{Linearity of expectation} \\
+	& = E[v^T(Z-\mu)(Z-\mu)^Tv] \\
+	& = E[((Z-\mu)^Tv)^2] \\
+	& \geq 0
+\end{align*}
+
+\item 2.  Denote the probability that an archer hits her target when it is windy as $P(H|W) = 0.4$, the probability that an archer hits her target when it is not windy as $P(H|NW) = 0.7$,  and the probability of a gust of wind as $P(W) = 0.3$.
+\item (i) $P_1 = P(W)P(H|W) = 0.3 \times 0.4 = 0.12$
+\item (ii) $P_2 = P(W)P(H|W) + (1-P(W))P(H|NW) = 0.3 \times 0.4 + (1-0.3) \times 0.7 = 0.12 + 0.49 = 0.61$
+\item (iii) $P_3 = {2 \choose 1} P_2 (1-P_2) = 2 \times 0.61 \times 0.39 = 0.4758$
+\item (iv) $P_4 = P(W^c|H^c) = \frac{P(H^c|W^c)P(W^c)}{P(H^c)} = \frac{0.3 \times 0.7}{0.39} = 0.5385$
+
+\item 3. 
+\begin{align*}
+	\text{Expected score} 
+	& = 4\int_{0}^{\frac{1}{\sqrt{3}}} \frac{2}{\pi(1+x^2)} \,dx\ + 3\int_{\frac{1}{\sqrt{3}}}^{1} \frac{2}{\pi(1+x^2)} \,dx\  + 2\int_{1}^{\sqrt{3}} \frac{2}{\pi(1+x^2)} \,dx\ \\
+	& = \frac{2}{\pi} [4\{arctan(\frac{1}{\sqrt{3}}) - arctan(0)\}+3\{arctan(1)-arctan(\frac{1}{\sqrt{3}})\}+ \\ 
+	& 2\{arctan(\sqrt{3})-arctan(1)\}]\\
+	& = \frac{13}{6}
+\end{align*}
+\item 4.
+\begin{align*}
+	P(X=k|X+Y=n)
+	& = \frac{P(X=k \cap X+Y=n)}{P(X+Y=n)}\\
+	& = \frac{P(X=k \cap Y=n-k)}{P(X+Y=n)}
+\end{align*}
+Since $X \perp Y$ and $X \sim Pois(\lambda)$, $Y \sim Pois(\mu)$,
+\begin{align*}
+P(X=k \cap Y=n-k)
+	& = \frac{e^{-\lambda}\lambda^k}{k!} \frac{e^{-\mu}\mu^{n-k}}{(n-k)!} \\
+	& = \frac{e^{-(\lambda+\mu)}}{n!} {n \choose k} \lambda^k \mu^{n-k}
+\end{align*}
+\begin{align*}
+P(X+Y=n)
+	& = \sum^{n}_{k=0}P(X=k \cap Y=n-k) \\
+	& = \sum^{n}_{k=0}\frac{e^{-(\lambda+\mu)}}{n!} {n \choose k} \lambda^k \mu^{n-k}\\
+	& = \frac{e^{-(\lambda+\mu)}}{n!}  (\lambda+\mu)^{n}
+\end{align*}
+Therefore,
+\begin{align*}
+P(X=k \cap X+Y=n)
+	& =  {n \choose k} \frac{\lambda^k \mu^{n-k}}{(\lambda+\mu)^{n}}
+\end{align*}
+This is a binomial distribution with parameters $n$ and $p = \frac{\lambda}{\lambda + \mu}$.
+\end{solution}
+
+
+
+\end{document}
